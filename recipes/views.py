@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 
 from .models import Recipes, Category
+from .forms import RecipeForm
 
 
 def index(request):
@@ -21,4 +22,12 @@ def get_category(request, category_id):
 def view_recipe(request, recipe_id):
     # recipe_item = Recipes.objects.get(pk=recipe_id)
     recipe_item = get_object_or_404(Recipes, pk=recipe_id)
-    return render(request, 'recipes/view_recipe.html', {"recipe_item": recipe_item})
+    return render(request, 'recipes/view_recipe.html', {'recipe_item': recipe_item})
+
+
+def add_recipe(request):
+    if request.method == 'POST':
+        pass
+    else:
+        form = RecipeForm()
+    return render(request, 'recipes/add_recipe.html', {'form': form})
