@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Recipes, Category
 from .forms import RecipeForm
@@ -27,7 +27,10 @@ def view_recipe(request, recipe_id):
 
 def add_recipe(request):
     if request.method == 'POST':
-        pass
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            new_recipe = form.save()
+            return redirect(new_recipe)
     else:
         form = RecipeForm()
     return render(request, 'recipes/add_recipe.html', {'form': form})
