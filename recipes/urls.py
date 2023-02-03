@@ -4,9 +4,9 @@ from django.views.decorators.cache import cache_page
 from .views import *
 
 urlpatterns = [
-    path('', index, name='home'),
-    path('category/<int:category_id>/', get_category, name='category'),
-    path('recipe/<int:recipe_id>/', view_recipe, name='view_recipe'),
+    path('', HomeRecipe.as_view(), name='home'),
+    path('category/<int:category_id>/', CategoryRecipe.as_view(), name='category'),
+    path('recipe/<int:pk>/', ViewRecipe.as_view(), name='view_recipe'),
     path('recipe/add_recipe/', add_recipe, name='add_recipe'),
 
 ]

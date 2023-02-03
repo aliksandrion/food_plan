@@ -1,28 +1,39 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView
 
 from .models import Recipes, Category
 from .forms import RecipeForm
 
 
-def index(request):
-    recipes = Recipes.objects.all()
-    context = {
-        'recipes': recipes,
-        'title': 'Recipes',
-    }
-    return render(request, template_name='recipes/index.html', context=context)
+class HomeRecipe(ListView):
+    model = Recipes
+    template_name = 'recipes/home_recipes_list.html'
+    context_object_name = 'recipes'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Main page'
+        return context
 
 
-def get_category(request, category_id):
-    recipes = Recipes.objects.filter(category_id=category_id)
-    category = Category.objects.get(pk=category_id)
-    return render(request, 'recipes/category.html', {'recipes': recipes, 'category': category})
+class CategoryRecipe(ListView):
+    model = Recipes
+    template_name = 'recipes/category.html'
+    context_object_name = 'recipes'
+    allow_empty = False
+
+    def get_queryset(self):
+        return Recipes.objects.filter(category_id=self.kwargs['category_id'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = Category.objects.get(pk=self.kwargs['category_id'])
+        return context
 
 
-def view_recipe(request, recipe_id):
-    # recipe_item = Recipes.objects.get(pk=recipe_id)
-    recipe_item = get_object_or_404(Recipes, pk=recipe_id)
-    return render(request, 'recipes/view_recipe.html', {'recipe_item': recipe_item})
+class ViewRecipe(DetailView):
+    model = Recipes
+    context_object_name = 'recipe_item'
 
 
 def add_recipe(request):

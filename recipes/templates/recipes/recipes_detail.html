@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ recipe_item.title }}{% endblock %}
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header">
+        <a href="{{ recipe_item.category.get_absolute_url }}">{{ recipe_item.category }}</a>
+    </div>
+    <div class="card-body">
+        <img src="{{ recipe_item.photo.url }}" alt="" width="350" class="float-left mr-3">
+        <h3 class="card-title">{{ recipe_item.title }}</h3>
+        <h5>Ingredients:</h5>
+        <p class="card-text">{{ recipe_item.ingredients|safe|linebreaks }}</p>
+        <h5>Directions:</h5>
+        <p class="card-text">{{ recipe_item.directions|safe|linebreaks }}</p>
+        <br>
+        <p class="card-text"><h5>Calories: {{ recipe_item.calories }} kcal<h5></p>
+    </div>
+    <div class="card-footer text-muted">
+        {{ recipe_item.created_at|date:"d-m-Y" }}
+    </div>
+</div>
+{% endblock %}

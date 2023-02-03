@@ -12,7 +12,7 @@ class Recipes(models.Model):
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Category')
 
     def get_absolute_url(self):
-        return reverse('view_recipe', kwargs={"recipe_id": self.pk})
+        return reverse('view_recipe', kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.title

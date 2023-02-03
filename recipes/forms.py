@@ -1,5 +1,7 @@
 from django import forms
 from .models import Recipes
+import re
+from django.core.exceptions import ValidationError
 
 
 class RecipeForm(forms.ModelForm):
@@ -12,10 +14,9 @@ class RecipeForm(forms.ModelForm):
             'directions': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
             'category': forms.Select(attrs={'class': 'form-control'})
         }
-    # title = forms.CharField(max_length=150, label='Name', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # ingredients = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
-    # directions = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
-    # photo = forms.ImageField()
-    # calories = forms.IntegerField(required=False)
-    # category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Select a category',
-    #                                   widget=forms.Select(attrs={'class': 'form-control'}))
+
+    def clean_title(self):
+        title = self.cleaned_data(['title'])
+        if re.match(r'/d', title):
+            raise ValidationError("Name must begin with a letter")
+        return title
