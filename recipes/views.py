@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from .models import Recipes, Category
 from .forms import RecipeForm
@@ -36,12 +36,6 @@ class ViewRecipe(DetailView):
     context_object_name = 'recipe_item'
 
 
-def add_recipe(request):
-    if request.method == 'POST':
-        form = RecipeForm(request.POST)
-        if form.is_valid():
-            new_recipe = form.save()
-            return redirect(new_recipe)
-    else:
-        form = RecipeForm()
-    return render(request, 'recipes/add_recipe.html', {'form': form})
+class CreateRecipe(CreateView):
+    form_class = RecipeForm
+    template_name = 'recipes/add_recipe.html'
