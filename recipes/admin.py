@@ -7,6 +7,9 @@ class NewsAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'title')
     search_fields = ('title', 'directions')
     list_filter = ('category',)
+    fields = ('title', 'ingredients', 'directions', 'photo', 'calories', 'category', 'created_at')
+    readonly_fields = ('created_at',)
+    save_on_top = True
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -17,3 +20,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Recipes, NewsAdmin)
 admin.site.register(Category, CategoryAdmin)
+
+admin.site.site_title = 'Change recipes'
+admin.site.site_header = 'Change recipes'

@@ -9,6 +9,7 @@ class HomeRecipe(ListView):
     model = Recipes
     template_name = 'recipes/home_recipes_list.html'
     context_object_name = 'recipes'
+    queryset = Recipes.objects.select_related('category')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,7 +24,7 @@ class CategoryRecipe(ListView):
     allow_empty = False
 
     def get_queryset(self):
-        return Recipes.objects.filter(category_id=self.kwargs['category_id'])
+        return Recipes.objects.filter(category_id=self.kwargs['category_id']).select_related('category')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
