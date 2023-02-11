@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Recipes, Category
 from .forms import RecipeForm
@@ -37,6 +38,7 @@ class ViewRecipe(DetailView):
     context_object_name = 'recipe_item'
 
 
-class CreateRecipe(CreateView):
+class CreateRecipe(LoginRequiredMixin, CreateView):
     form_class = RecipeForm
     template_name = 'recipes/add_recipe.html'
+    login_url = '/admin/'
