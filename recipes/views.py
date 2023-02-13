@@ -11,6 +11,7 @@ class HomeRecipe(ListView):
     template_name = 'recipes/home_recipes_list.html'
     context_object_name = 'recipes'
     queryset = Recipes.objects.select_related('category')
+    paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,6 +24,7 @@ class CategoryRecipe(ListView):
     template_name = 'recipes/category.html'
     context_object_name = 'recipes'
     allow_empty = False
+    paginate_by = 5
 
     def get_queryset(self):
         return Recipes.objects.filter(category_id=self.kwargs['category_id']).select_related('category')
