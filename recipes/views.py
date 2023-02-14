@@ -3,7 +3,26 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Recipes, Category
-from .forms import RecipeForm
+from .forms import RecipeForm, UserRegisterForm
+from django.contrib import messages
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thanks for signing up!')
+            return redirect('login')
+        else:
+            messages.error(request, 'Sorry, something wrong.')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'recipes/register.html', {'form': form})
+
+
+def login(request):
+    return render(request, 'recipes/login.html')
 
 
 class HomeRecipe(ListView):
