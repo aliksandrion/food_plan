@@ -3,17 +3,19 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Recipes, Category
-from .forms import RecipeForm, UserRegisterForm
+from .forms import RecipeForm, UserRegisterForm, UserLoginForm
 from django.contrib import messages
+from django.contrib.auth import login, logout
 
 
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
             messages.success(request, 'Thanks for signing up!')
-            return redirect('login')
+            return redirect('home')
         else:
             messages.error(request, 'Sorry, something wrong.')
     else:
@@ -21,8 +23,30 @@ def register(request):
     return render(request, 'recipes/register.html', {'form': form})
 
 
-def login(request):
-    return render(request, 'recipes/login.html')
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+    # if request.method == 'POST':
+    #     form = UserLoginForm(data=request.POST)
+    #     if form.is_valid():
+    #         user = form.get_user()
+    #         login(request, user)
+    #         return redirect('home')
+    # else:
+    #     form = UserLoginForm()
+    # return render(request, 'recipes/login.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserLoginForm()
+    return render(request, 'recipes/login.html', {'form': form})
 
 
 class HomeRecipe(ListView):
