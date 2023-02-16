@@ -2,10 +2,28 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Recipes, Category
-from .forms import RecipeForm, UserRegisterForm, UserLoginForm
+from .models import *
+from .forms import *
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.core.mail import send_mail
+from config.additional_settings import HOST_USER
+
+
+def feedback(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], HOST_USER, [HOST_USER],
+                             fail_silently=True)
+            if mail:
+                messages.success(request, 'Check your email.')
+                return redirect('home')
+            else:
+                messages.error(request, 'Sorry, something wrong.')
+    else:
+        form = ContactForm()
+    return render(request, 'recipes/feedback.html', {'form': form})
 
 
 def register(request):
