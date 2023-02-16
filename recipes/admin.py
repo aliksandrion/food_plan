@@ -1,8 +1,21 @@
 from django.contrib import admin
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
+from django import forms
 from .models import Recipes, Category
 
 
+class RecipesAdminForm(forms.ModelForm):
+    ingredients = forms.CharField(widget=CKEditorUploadingWidget())
+    directions = forms.CharField(widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = Recipes
+        fields = '__all__'
+
+
 class NewsAdmin(admin.ModelAdmin):
+    form = RecipesAdminForm
     list_display = ('id', 'title', 'category', 'created_at')
     list_display_links = ('id', 'title')
     search_fields = ('title', 'directions')
