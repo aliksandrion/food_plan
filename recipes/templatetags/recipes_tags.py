@@ -1,5 +1,6 @@
 from django import template
 from recipes.models import Category
+from django.core.cache import cache
 
 register = template.Library()
 
@@ -11,5 +12,8 @@ def get_categories():
 
 @register.inclusion_tag('recipes/list_categories.html')
 def show_categories():
-    categories = Category.objects.all()
+    categories = cache.get('categories')
+    if not categories:
+        categories = Category.objects.all()
+        cache.set('categories', categories, 30)
     return {"categories": categories}

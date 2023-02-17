@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 **/.DS_Store
 media/
+django_cache/
 additional_settings.py
 
 # C extensions
